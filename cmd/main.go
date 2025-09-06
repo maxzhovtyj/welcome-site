@@ -14,7 +14,12 @@ import (
 )
 
 var (
-	httpListenAddr    = flag.String("httpListenAddr", ":8080", "HTTP listen address")
+	httpListenAddr = flag.String("httpListenAddr", ":8080", "HTTP listen address")
+
+	httpListenAddrTLS = flag.String("httpListenAddrTLS", ":8081", "HTTPS listen address")
+	httpTLSCertFile   = flag.String("httpTLSCertFile", "", "HTTPS cert file")
+	httpTLSKeyFile    = flag.String("httpTLSKeyFile", "", "HTTPS key file")
+
 	publicStaticFSDir = flag.String("publicStaticFSDir", "", "Public static files directory")
 )
 
@@ -42,8 +47,19 @@ func main() {
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 
-	log.Printf("Listening on %s\n", *httpListenAddr)
-	log.Fatal(srv.ListenAndServe())
+	if *httpListenAddrTLS != "" {
+		log.Printf("Listening https on %s\n", *httpListenAddr)
+		err := srv.ListenAndServeTLS(*httpTLSCertFile, *httpTLSKeyFile)
+		if err != nil {
+			log.Fatalf("ListenAndServeTLS: %v", err)
+		}
+	}
+
+	log.Printf("Listening http on %s\n", *httpListenAddr)
+	err := srv.ListenAndServe()
+	if err != nil {
+		log.Fatalf("ListenAndServe: %v", err)
+	}
 }
 
 type AttendanceMessage struct {
