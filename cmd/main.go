@@ -14,9 +14,9 @@ import (
 )
 
 var (
-	httpListenAddr = flag.String("httpListenAddr", ":8080", "HTTP listen address")
+	httpListenAddr = flag.String("httpListenAddr", "", "HTTP listen address")
 
-	httpListenAddrTLS = flag.String("httpListenAddrTLS", ":8081", "HTTPS listen address")
+	httpListenAddrTLS = flag.String("httpListenAddrTLS", "", "HTTPS listen address")
 	httpTLSCertFile   = flag.String("httpTLSCertFile", "", "HTTPS cert file")
 	httpTLSKeyFile    = flag.String("httpTLSKeyFile", "", "HTTPS key file")
 
